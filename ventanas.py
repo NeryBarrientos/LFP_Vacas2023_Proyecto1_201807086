@@ -3,6 +3,14 @@ from tkinter import Label, Button, Frame, messagebox, Entry, StringVar, Text
 import easygui as eg
 from ttkthemes import ThemedTk
 from graphviz import Digraph
+import webbrowser
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+
 
 informacion_afn = []
 informacion_afd =[]
@@ -90,14 +98,22 @@ def aceptar_afn():
         if datos != '' and datos != ' ':
             temporal_sin_vacios.append(datos)
     transiciones_afn = temporal_sin_vacios
+    trans_corregidas = []
+    for datos in transiciones_afn:
+        lista_trans = []
+        dato = datos.split(',')
+        temporal = dato[1].split(';')
+        lista_trans.append(dato[0])
+        lista_trans.append(temporal[0])
+        lista_trans.append(temporal[1])
+        trans_corregidas.append(lista_trans)
     diccionario["nombre"] = nombre_afn.get()
     diccionario["estados"] = estados_afn.get().split(',')
     diccionario["alfabeto"] = alfabeto_afn.get().split(',')
     diccionario["estado inicial"] = estado_inicial_afn.get()
     diccionario["estados de aceptacion"] = estados_aceptacion_afn.get().split(',')
-    diccionario["transciciones"] = transiciones_afn
+    diccionario["transciciones"] = trans_corregidas
     informacion_afn.append(diccionario)
-    print(informacion_afn)
 
 def aceptar_afd():
     diccionario = {}
@@ -108,15 +124,24 @@ def aceptar_afd():
         if datos != '' and datos != ' ':
             temporal_sin_vacios.append(datos)
     transiciones_afd = temporal_sin_vacios
+    trans_corregidas = []
+    for datos in transiciones_afd:
+        lista_trans = []
+        dato = datos.split(',')
+        temporal = dato[1].split(';')
+        lista_trans.append(dato[0])
+        lista_trans.append(temporal[0])
+        lista_trans.append(temporal[1])
+        trans_corregidas.append(lista_trans)
     diccionario["nombre"] = nombre_afd.get()
     diccionario["estados"] = estados_afd.get().split(',')
     diccionario["alfabeto"] = alfabeto_afd.get().split(',')
     diccionario["estado inicial"] = estado_inicial_afd.get()
     diccionario["estados de aceptacion"] = estados_aceptacion_afd.get().split(',')
-    diccionario["transciciones"] = transiciones_afd
+    diccionario["transciciones"] = trans_corregidas
     informacion_afd.append(diccionario)
-    print(informacion_afd)
 
+#Carga Masiva
 def cargar_AFD():
     global informacion_afd
     lista = []
@@ -214,9 +239,9 @@ def cargar_AFN():
             trans_corregidas.append(lista_trans)
         diccionario["transciciones"] = trans_corregidas 
         informacion_afn.append(diccionario)
-    print(informacion_afn[1])
     f.close()
 
+#Generacion grafica
 def generarDOT_afd():
     for element in informacion_afd:
         index = str(informacion_afd.index(element))
@@ -247,7 +272,73 @@ def generarDOT_afn():
             dot.edge(trans[0], trans[2], label=trans[1])
         dot.render(f'AFNPrueba{index}', view=False)
 
+#Reportes
 
+def reporte_afd():
+    generarDOT_afd()
+    w, h = A4
+    pdf = canvas.Canvas("Reporte_afd.pdf", pagesize=A4)
+    pdf.setTitle("Reporte de AFD")
+    for element in informacion_afd:
+        index = str(informacion_afd.index(element))
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+        text.textLine('Nombre: '+  element['nombre'])
+        text.textLine("Estados: " + ','.join(element['estados']))
+        text.textLine("Alfabeto: " + ','.join(element['alfabeto']))
+        text.textLine("Estado Inicial: "+ element['estado inicial'])
+        text.textLine("Estados de Aceptacion: "+ ','.join(element['estados de aceptacion']))
+        text.textLine("Transiciones:")
+        for datos in element['transciciones']:
+            text.textLine(f'{datos[0]} , {datos[1]} ; {datos[2]}')
+        text.textLine()
+        pdf.drawText(text)
+        text = "AFD generado con Graphviz"
+        text_width = pdf.stringWidth(text, "Times-Roman", 12)
+        pdf.drawCentredString(w / 2, h - 200, text)
+
+        image_path = f'AFDPrueba{index}.png'
+        image_width = 200
+        image_height = 200
+        image_x = (w - image_width) / 2
+        image_y = h - 250 - image_height  # Adjust the vertical position as needed
+        pdf.drawInlineImage(image_path, image_x, image_y, width=image_width, height=image_height, preserveAspectRatio=True)
+        pdf.showPage()  # Agregar una nueva página antes de la imagen
+    pdf.save()
+    webbrowser.open_new_tab('Reporte_afd.pdf')
+
+def reporte_afn():
+    generarDOT_afn()
+    w, h = A4
+    pdf = canvas.Canvas("Reporte_afn.pdf", pagesize=A4)
+    pdf.setTitle("Reporte de AFN")
+    for element in informacion_afn:
+        index = str(informacion_afn.index(element))
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+        text.textLine('Nombre: '+  element['nombre'])
+        text.textLine("Estados: " + ','.join(element['estados']))
+        text.textLine("Alfabeto: " + ','.join(element['alfabeto']))
+        text.textLine("Estados Inicial: "+ element['estado inicial'])
+        text.textLine("Estados de Aceptacion: "+ ','.join(element['estados de aceptacion']))
+        text.textLine("Transiciones:")
+        for datos in element['transciciones']:
+            text.textLine(f'{datos[0]} , {datos[1]} ; {datos[2]}')
+        text.textLine()
+        pdf.drawText(text)
+        text = "AFN generado con Graphviz"
+        text_width = pdf.stringWidth(text, "Times-Roman", 12)
+        pdf.drawCentredString(w / 2, h - 200, text)
+
+        image_path = f'AFNPrueba{index}.png'
+        image_width = 200
+        image_height = 200
+        image_x = (w - image_width) / 2
+        image_y = h - 250 - image_height  # Adjust the vertical position as needed
+        pdf.drawInlineImage(image_path, image_x, image_y, width=image_width, height=image_height, preserveAspectRatio=True)
+        pdf.showPage()  # Agregar una nueva página antes de la imagen
+    pdf.save()
+    webbrowser.open_new_tab('Reporte_afn.pdf')
 # Ventanas
 
 
@@ -269,7 +360,7 @@ def ventana_afn(master, callback=None, args=(), kwargs={}):
                            width=15, height=3, bd="4", command=None)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
     boton_reporte = Button(frame_centrado, text='Generar Reporte',
-                           width=15, height=3, bd="4", command=generarDOT_afn)
+                           width=15, height=3, bd="4", command=reporte_afn)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
     boton_ayuda = Button(frame_centrado, text='Ayuda',
                          width=15, height=3, bd="4", command=None)
@@ -358,7 +449,7 @@ def ventana_afd(master, callback=None, args=(), kwargs={}):
     boton_crear.grid(row=1, column=0, padx=10, pady=10)
     boton_evaluar = Button(frame_centrado, text='Evaluar Cadena',width=15, height=3, bd="4", command=None)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
-    boton_reporte = Button(frame_centrado, text='Generar Reporte',width=15, height=3, bd="4", command=generarDOT_afd)
+    boton_reporte = Button(frame_centrado, text='Generar Reporte',width=15, height=3, bd="4", command=reporte_afd)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
     boton_ayuda = Button(frame_centrado, text='Ayuda',width=15, height=3, bd="4", command=None)
     boton_ayuda.grid(row=4, column=0, padx=10, pady=10)
