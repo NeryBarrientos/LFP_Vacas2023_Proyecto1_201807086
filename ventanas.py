@@ -2,7 +2,7 @@ import functools
 from tkinter import Label, Button, Frame, messagebox, Entry, StringVar, Text
 import easygui as eg
 from ttkthemes import ThemedTk
-
+from graphviz import Digraph
 
 informacion_afn = []
 informacion_afd =[]
@@ -135,12 +135,16 @@ def cargar_AFD():
     leer = f.read()
     lista_temporal = leer.split('%')
     for element in lista_temporal:
+        temporal_sin_vacios = ''
+        if element != '' and element != ' ':
+            temporal_sin_vacios = element   
+        temporal = temporal_sin_vacios.split('\n')
         temporal_sin_vacios = []
-        temporal = element.split('\n')
         for datos in temporal:
             if datos != '' and datos != ' ':
                 temporal_sin_vacios.append(datos)
-        lista.append(temporal_sin_vacios)
+        if element != '' and element != ' ':
+            lista.append(temporal_sin_vacios)
     for element in lista:
         diccionario = {}
         diccionario["nombre"] = element[0]
@@ -148,9 +152,18 @@ def cargar_AFD():
         diccionario["alfabeto"] = element[2].split(',')
         diccionario["estado inicial"] = element[3]
         diccionario["estados de aceptacion"] = element[4].split(',')
-        diccionario["transciciones"] = element[5::]
+        transiciones = element[5::]
+        trans_corregidas = []
+        for datos in transiciones:
+            lista_trans = []
+            dato = datos.split(',')
+            temporal = dato[1].split(';')
+            lista_trans.append(dato[0])
+            lista_trans.append(temporal[0])
+            lista_trans.append(temporal[1])
+            trans_corregidas.append(lista_trans)
+        diccionario["transciciones"] = trans_corregidas 
         informacion_afd.append(diccionario)
-    print(informacion_afd[0]["nombre"])
     f.close()
 
 
@@ -172,12 +185,16 @@ def cargar_AFN():
     leer = f.read()
     lista_temporal = leer.split('%')
     for element in lista_temporal:
+        temporal_sin_vacios = ''
+        if element != '' and element != ' ':
+            temporal_sin_vacios = element   
+        temporal = temporal_sin_vacios.split('\n')
         temporal_sin_vacios = []
-        temporal = element.split('\n')
         for datos in temporal:
             if datos != '' and datos != ' ':
                 temporal_sin_vacios.append(datos)
-        lista.append(temporal_sin_vacios)
+        if element != '' and element != ' ':
+            lista.append(temporal_sin_vacios)
     for element in lista:
         diccionario = {}
         diccionario["nombre"] = element[0]
@@ -185,28 +202,50 @@ def cargar_AFN():
         diccionario["alfabeto"] = element[2].split(',')
         diccionario["estado inicial"] = element[3]
         diccionario["estados de aceptacion"] = element[4].split(',')
-        diccionario["transciciones"] = element[5::]
+        transiciones = element[5::]
+        trans_corregidas = []
+        for datos in transiciones:
+            lista_trans = []
+            dato = datos.split(',')
+            temporal = dato[1].split(';')
+            lista_trans.append(dato[0])
+            lista_trans.append(temporal[0])
+            lista_trans.append(temporal[1])
+            trans_corregidas.append(lista_trans)
+        diccionario["transciciones"] = trans_corregidas 
         informacion_afn.append(diccionario)
-    print(informacion_afn[0]["nombre"])
+    print(informacion_afn[1])
     f.close()
 
-    '''
-    diccionario = {
-    "nombre": AFN_1;
-    "estados": A,B,C,D;
-    "alfabeto": 0,1;
-    "estado inicial": A
-    "estados de aceptacion": C;
-    "Transiciones": [A,1;B
-A,0;C
-B,1;A
-B,0;D
-C,1;D
-C,0;A
-D,1;C
-D,0;B
-A,1;B]
-}'''
+def generarDOT_afd():
+    for element in informacion_afd:
+        index = str(informacion_afd.index(element))
+        dot = Digraph('AFD', filename=f'AFDPrueba{index}', format='png')
+        dot.attr(rankdir='LR', size='8,5')
+        dot.attr('node', shape='doublecircle')
+        for estadosA in element["estados de aceptacion"]:
+            dot.node(estadosA)
+        dot.attr('node', shape='circle')
+        for estados in element["estados"]:
+            dot.node(estados)
+        for trans in element["transciciones"]:
+            dot.edge(trans[0], trans[2], label=trans[1])
+        dot.render(f'AFDPrueba{index}', view=False)
+
+def generarDOT_afn():
+    for element in informacion_afn:
+        index = str(informacion_afn.index(element))
+        dot = Digraph('AFN', filename=f'AFNPrueba{index}', format='png')
+        dot.attr(rankdir='LR', size='8,5')
+        dot.attr('node', shape='doublecircle')
+        for estadosA in element["estados de aceptacion"]:
+            dot.node(estadosA)
+        dot.attr('node', shape='circle')
+        for estados in element["estados"]:
+            dot.node(estados)
+        for trans in element["transciciones"]:
+            dot.edge(trans[0], trans[2], label=trans[1])
+        dot.render(f'AFNPrueba{index}', view=False)
 
 
 # Ventanas
@@ -230,7 +269,7 @@ def ventana_afn(master, callback=None, args=(), kwargs={}):
                            width=15, height=3, bd="4", command=None)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
     boton_reporte = Button(frame_centrado, text='Generar Reporte',
-                           width=15, height=3, bd="4", command=None)
+                           width=15, height=3, bd="4", command=generarDOT_afn)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
     boton_ayuda = Button(frame_centrado, text='Ayuda',
                          width=15, height=3, bd="4", command=None)
@@ -319,7 +358,7 @@ def ventana_afd(master, callback=None, args=(), kwargs={}):
     boton_crear.grid(row=1, column=0, padx=10, pady=10)
     boton_evaluar = Button(frame_centrado, text='Evaluar Cadena',width=15, height=3, bd="4", command=None)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
-    boton_reporte = Button(frame_centrado, text='Generar Reporte',width=15, height=3, bd="4", command=None)
+    boton_reporte = Button(frame_centrado, text='Generar Reporte',width=15, height=3, bd="4", command=generarDOT_afd)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
     boton_ayuda = Button(frame_centrado, text='Ayuda',width=15, height=3, bd="4", command=None)
     boton_ayuda.grid(row=4, column=0, padx=10, pady=10)
@@ -513,3 +552,4 @@ miFrame1.pack(side="bottom", fill="x")
 miFrame1.config(width="500", height="30", relief="solid", bd="3")
 
 ventana.mainloop()
+# generarDOT()
