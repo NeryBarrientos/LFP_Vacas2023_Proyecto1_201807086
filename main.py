@@ -1,3 +1,3 @@
-from prueba_ventana import ventana
+from ventanas import ventana
 
 ventana.mainloop()
