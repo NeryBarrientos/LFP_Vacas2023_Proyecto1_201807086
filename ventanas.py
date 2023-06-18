@@ -1,21 +1,18 @@
 import functools
-from tkinter import Label, Button, Frame, messagebox, Entry, StringVar, Text
+from tkinter import Label, Button, Frame, messagebox, Entry, StringVar, Text, ttk
 import easygui as eg
 from ttkthemes import ThemedTk
 from graphviz import Digraph
 import webbrowser
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-
+from PIL import ImageTk, Image
+import os
 
 informacion_afn = []
 informacion_afd =[]
-# Llamados Ventanas
 
+# Llamados Ventanas
 
 def mostrar_principal():
     var_ventana_afn.pack_forget()
@@ -23,6 +20,11 @@ def mostrar_principal():
     var_ventana_oe.pack_forget()
     var_ventana_afd_crear.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     miFrameV.pack(side="top", fill="both", expand=True)
 
 
@@ -33,7 +35,26 @@ def mostrar_ventana_afn():
     var_ventana_cargar_archivos.pack_forget()
     var_ventana_afd_crear.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_afn.pack(side="top", fill="both", expand=True)
+
+def mostrar_ventana_evaluar_afn():
+    miFrameV.pack_forget()
+    var_ventana_afd.pack_forget()
+    var_ventana_oe.pack_forget()
+    var_ventana_cargar_archivos.pack_forget()
+    var_ventana_afd_crear.pack_forget()
+    var_ventana_afn_crear.pack_forget()
+    var_ventana_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
+    var_ventana_evaluar_afn.pack(side="top", fill="both", expand=True)
 
 def mostrar_ventana_afn_crear():
     miFrameV.pack_forget()
@@ -42,7 +63,26 @@ def mostrar_ventana_afn_crear():
     var_ventana_cargar_archivos.pack_forget()
     var_ventana_afd.pack_forget()
     var_ventana_afd_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_afn_crear.pack(side="top", fill="both", expand=True)
+
+def mostrar_ventana_ayuda_afn():
+    miFrameV.pack_forget()
+    var_ventana_afd.pack_forget()
+    var_ventana_oe.pack_forget()
+    var_ventana_cargar_archivos.pack_forget()
+    var_ventana_afd_crear.pack_forget()
+    var_ventana_afn_crear.pack_forget()
+    var_ventana_afn.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
+    var_ventana_ayuda_afn.pack(side="top", fill="both", expand=True)
 
 def mostrar_ventana_afd():
     miFrameV.pack_forget()
@@ -51,8 +91,26 @@ def mostrar_ventana_afd():
     var_ventana_cargar_archivos.pack_forget()
     var_ventana_afd_crear.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_afd.pack(side="top", fill="both", expand=True)
 
+def mostrar_ventana_evaluar_afd():
+    miFrameV.pack_forget()
+    var_ventana_afd.pack_forget()
+    var_ventana_oe.pack_forget()
+    var_ventana_cargar_archivos.pack_forget()
+    var_ventana_afd_crear.pack_forget()
+    var_ventana_afn_crear.pack_forget()
+    var_ventana_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_validar_afd.pack_forget()
+    var_ventana_evaluar_afd.pack(side="top", fill="both", expand=True)
 
 def mostrar_ventana_afd_crear():
     miFrameV.pack_forget()
@@ -61,7 +119,40 @@ def mostrar_ventana_afd_crear():
     var_ventana_cargar_archivos.pack_forget()
     var_ventana_afd.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_afd_crear.pack(side="top", fill="both", expand=True)
+
+def mostrar_ventana_validar_afd():
+    miFrameV.pack_forget()
+    var_ventana_afn.pack_forget()
+    var_ventana_oe.pack_forget()
+    var_ventana_cargar_archivos.pack_forget()
+    var_ventana_afd.pack_forget()
+    var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_afd_crear.pack_forget()
+    var_ventana_validar_afd.pack(side="top", fill="both", expand=True)
+
+def mostrar_ventana_ayuda_afd():
+    miFrameV.pack_forget()
+    var_ventana_afn.pack_forget()
+    var_ventana_oe.pack_forget()
+    var_ventana_cargar_archivos.pack_forget()
+    var_ventana_afd.pack_forget()
+    var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_afd_crear.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
+    var_ventana_ayuda_afd.pack(side="top", fill="both", expand=True)
 
 
 def mostrar_ventana_oe():
@@ -70,6 +161,11 @@ def mostrar_ventana_oe():
     var_ventana_afd.pack_forget()
     var_ventana_cargar_archivos.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_oe.pack(side="top", fill="both", expand=True)
 
 
@@ -79,6 +175,11 @@ def mostrar_ventana_cargar():
     var_ventana_afd.pack_forget()
     var_ventana_oe.pack_forget()
     var_ventana_afn_crear.pack_forget()
+    var_ventana_evaluar_afn.pack_forget()
+    var_ventana_ayuda_afn.pack_forget()
+    var_ventana_ayuda_afd.pack_forget()
+    var_ventana_evaluar_afd.pack_forget()
+    var_ventana_validar_afd.pack_forget()
     var_ventana_cargar_archivos.pack(side="top", fill="both", expand=True)
 
 # Funcion Salir
@@ -114,6 +215,11 @@ def aceptar_afn():
     diccionario["estados de aceptacion"] = estados_aceptacion_afn.get().split(',')
     diccionario["transciciones"] = trans_corregidas
     informacion_afn.append(diccionario)
+    imprimir = '*********************************************'
+    imprimir1 = 'AFN Agregado exitosamente'
+    mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + '\n' + imprimir1.center(75, ' ') + '\n' + imprimir.center(75, ' ') + '\n'
+    messagebox.showinfo(message=mensaje, title="Mensaje")
+
 
 def aceptar_afd():
     diccionario = {}
@@ -140,6 +246,10 @@ def aceptar_afd():
     diccionario["estados de aceptacion"] = estados_aceptacion_afd.get().split(',')
     diccionario["transciciones"] = trans_corregidas
     informacion_afd.append(diccionario)
+    imprimir = '*********************************************'
+    imprimir1 = 'AFD Agregado exitosamente'
+    mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + '\n' + imprimir1.center(75, ' ') + '\n' + imprimir.center(75, ' ') + '\n'
+    messagebox.showinfo(message=mensaje, title="Mensaje")
 
 #Carga Masiva
 def cargar_AFD():
@@ -243,9 +353,16 @@ def cargar_AFN():
 
 #Generacion grafica
 def generarDOT_afd():
+    # Nombre de la carpeta
+    carpeta_automatas = "automatas"
+
+    # Crear la carpeta si no existe
+    if not os.path.exists(carpeta_automatas):
+        os.makedirs(carpeta_automatas)
     for element in informacion_afd:
         index = str(informacion_afd.index(element))
-        dot = Digraph('AFD', filename=f'AFDPrueba{index}', format='png')
+        ruta_archivo = os.path.join(carpeta_automatas, f'AFDPrueba{index}')
+        dot = Digraph('AFD', filename=ruta_archivo, format='png')
         dot.attr(rankdir='LR', size='8,5')
         dot.attr('node', shape='doublecircle')
         for estadosA in element["estados de aceptacion"]:
@@ -255,12 +372,18 @@ def generarDOT_afd():
             dot.node(estados)
         for trans in element["transciciones"]:
             dot.edge(trans[0], trans[2], label=trans[1])
-        dot.render(f'AFDPrueba{index}', view=False)
+        dot.render(f'automatas/AFDPrueba{index}', view=False)
 
 def generarDOT_afn():
+    carpeta_automatas = "automatas"
+
+    # Crear la carpeta si no existe
+    if not os.path.exists(carpeta_automatas):
+        os.makedirs(carpeta_automatas)
     for element in informacion_afn:
         index = str(informacion_afn.index(element))
-        dot = Digraph('AFN', filename=f'AFNPrueba{index}', format='png')
+        ruta_archivo = os.path.join(carpeta_automatas, f'AFNPrueba{index}')
+        dot = Digraph('AFN', filename=ruta_archivo, format='png')
         dot.attr(rankdir='LR', size='8,5')
         dot.attr('node', shape='doublecircle')
         for estadosA in element["estados de aceptacion"]:
@@ -270,7 +393,7 @@ def generarDOT_afn():
             dot.node(estados)
         for trans in element["transciciones"]:
             dot.edge(trans[0], trans[2], label=trans[1])
-        dot.render(f'AFNPrueba{index}', view=False)
+        dot.render(f'automatas/AFNPrueba{index}', view=False)
 
 #Reportes
 
@@ -297,7 +420,7 @@ def reporte_afd():
         text_width = pdf.stringWidth(text, "Times-Roman", 12)
         pdf.drawCentredString(w / 2, h - 200, text)
 
-        image_path = f'AFDPrueba{index}.png'
+        image_path = f'automatas/AFDPrueba{index}.png'
         image_width = 200
         image_height = 200
         image_x = (w - image_width) / 2
@@ -330,7 +453,7 @@ def reporte_afn():
         text_width = pdf.stringWidth(text, "Times-Roman", 12)
         pdf.drawCentredString(w / 2, h - 200, text)
 
-        image_path = f'AFNPrueba{index}.png'
+        image_path = f'automatas/AFNPrueba{index}.png'
         image_width = 200
         image_height = 200
         image_x = (w - image_width) / 2
@@ -340,12 +463,9 @@ def reporte_afn():
     pdf.save()
     webbrowser.open_new_tab('Reporte_afn.pdf')
 # Ventanas
-
-
 def ventana_afn(master, callback=None, args=(), kwargs={}):
     if callback is not None:
         callback = functools.partial(callback, *args, **kwargs)
-
     main_frame = Frame(master)
     # frame centrado
     frame_centrado = Frame(main_frame, height=310, width=450)
@@ -357,14 +477,36 @@ def ventana_afn(master, callback=None, args=(), kwargs={}):
                          width=15, height=3, bd="4", command=mostrar_ventana_afn_crear)
     boton_crear.grid(row=1, column=0, padx=10, pady=10)
     boton_evaluar = Button(frame_centrado, text='Evaluar Cadena',
-                           width=15, height=3, bd="4", command=None)
+                           width=15, height=3, bd="4", command=mostrar_ventana_evaluar_afn)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
     boton_reporte = Button(frame_centrado, text='Generar Reporte',
                            width=15, height=3, bd="4", command=reporte_afn)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
     boton_ayuda = Button(frame_centrado, text='Ayuda',
-                         width=15, height=3, bd="4", command=None)
+                         width=15, height=3, bd="4", command=mostrar_ventana_ayuda_afn)
     boton_ayuda.grid(row=4, column=0, padx=10, pady=10)
+    boton_regresar = Button(frame_centrado, text='Regresar', width=15,
+                            height=3, command=callback, bd="4")
+    boton_regresar.grid(row=5, column=0, padx=10, pady=10)
+    return main_frame
+
+def ventana_evaluar_afn(master, callback=None, args=(), kwargs={}):
+    if callback is not None:
+        callback = functools.partial(callback, *args, **kwargs)
+
+    main_frame = Frame(master)
+    # frame centrado
+    frame_centrado = Frame(main_frame, height=310, width=450)
+    frame_centrado.place(relx=0.5, rely=0.5, anchor="center")
+    # agregando botones
+    label = Label(frame_centrado, text="Modulo Evaluar AFN")
+    label.grid(row=0, column=0, padx=10, pady=10)
+    boton_validar = Button(frame_centrado, text='Solo Validar',
+                         width=15, height=3, bd="4", command=None)
+    boton_validar.grid(row=1, column=0, padx=10, pady=10)
+    boton_ruta = Button(frame_centrado, text='Ruta',
+                           width=15, height=3, bd="4", command=None)
+    boton_ruta.grid(row=2, column=0, padx=10, pady=10)
     boton_regresar = Button(frame_centrado, text='Regresar', width=15,
                             height=3, command=callback, bd="4")
     boton_regresar.grid(row=5, column=0, padx=10, pady=10)
@@ -433,6 +575,38 @@ def ventana_afn_crear(master, callback=None, args=(), kwargs={}):
     boton_aceptar.grid(row=7, column=1, padx=10, pady=10)
     return main_frame
 
+def ventana_afn_ayuda(master, callback=None, args=(), kwargs={}):
+    if callback is not None:
+        callback = functools.partial(callback, *args, **kwargs)
+
+    main_frame = Frame(master)
+    # frame centrado
+    frame_centrado = Frame(main_frame, height=310, width=450)
+    frame_centrado.place(relx=0.5, rely=0.5, anchor="center")
+    # agregando botones
+    label = Label(frame_centrado, text="Modulo Ayuda AFN")
+    label.grid(row=0, column=0, padx=10, pady=10)
+    imagen_ayuda = Image.open("imagenes/afn.png")
+    imagen_ejemplo = Image.open("imagenes/ejemploafn.png")
+    max_width = 600
+    max_height = 250
+    ajustada_ayuda = imagen_ayuda.resize((max_width,max_height-50), Image.ANTIALIAS)
+    ajustada_ejemplo = imagen_ejemplo.resize((max_width,max_height-50), Image.ANTIALIAS)
+    imagen_ayuda_tk = ImageTk.PhotoImage(ajustada_ayuda)
+    imagen_ejemplo_tk = ImageTk.PhotoImage(ajustada_ejemplo)
+    
+    label_image = Label(frame_centrado, image=imagen_ayuda_tk)
+    label_ejemplo = Label(frame_centrado, image=imagen_ejemplo_tk)
+    label_image.grid(row=1, column=0)
+    label_ejemplo.grid(row=2, column=0)
+    
+    # Mantén una referencia global a la imagen
+    label_image.image = imagen_ayuda_tk
+    label_ejemplo.image = imagen_ejemplo_tk
+    boton_regresar = Button(frame_centrado, text='Regresar', width=15,
+                            height=3, command=callback, bd="4")
+    boton_regresar.grid(row=3, column=0, padx=10, pady=10)
+    return main_frame
 
 def ventana_afd(master, callback=None, args=(), kwargs={}):
     if callback is not None:
@@ -447,16 +621,118 @@ def ventana_afd(master, callback=None, args=(), kwargs={}):
     label.grid(row=0, column=0, padx=10, pady=10)
     boton_crear = Button(frame_centrado, text='Crear AFD', width=15,height=3, bd="4", command=mostrar_ventana_afd_crear)
     boton_crear.grid(row=1, column=0, padx=10, pady=10)
-    boton_evaluar = Button(frame_centrado, text='Evaluar Cadena',width=15, height=3, bd="4", command=None)
+    boton_evaluar = Button(frame_centrado, text='Evaluar Cadena',width=15, height=3, bd="4", command=mostrar_ventana_evaluar_afd)
     boton_evaluar.grid(row=2, column=0, padx=10, pady=10)
     boton_reporte = Button(frame_centrado, text='Generar Reporte',width=15, height=3, bd="4", command=reporte_afd)
     boton_reporte.grid(row=3, column=0, padx=10, pady=10)
-    boton_ayuda = Button(frame_centrado, text='Ayuda',width=15, height=3, bd="4", command=None)
+    boton_ayuda = Button(frame_centrado, text='Ayuda',width=15, height=3, bd="4", command=mostrar_ventana_ayuda_afd)
     boton_ayuda.grid(row=4, column=0, padx=10, pady=10)
     boton_regresar = Button(frame_centrado, text='Regresar',width=15, height=3, command=callback, bd="4")
     boton_regresar.grid(row=5, column=0, padx=10, pady=10)
     return main_frame
 
+def ventana_evaluar_afd(master, callback=None, args=(), kwargs={}):
+    if callback is not None:
+        callback = functools.partial(callback, *args, **kwargs)
+
+    main_frame = Frame(master)
+    # frame centrado
+    frame_centrado = Frame(main_frame, height=310, width=450)
+    frame_centrado.place(relx=0.5, rely=0.5, anchor="center")
+    # agregando botones
+    label = Label(frame_centrado, text="Modulo Evaluar AFD")
+    label.grid(row=0, column=0, padx=10, pady=10)
+    boton_validar = Button(frame_centrado, text='Solo Validar',
+                         width=15, height=3, bd="4", command=mostrar_ventana_validar_afd)
+    boton_validar.grid(row=1, column=0, padx=10, pady=10)
+    boton_ruta = Button(frame_centrado, text='Ruta',
+                           width=15, height=3, bd="4", command=None)
+    boton_ruta.grid(row=2, column=0, padx=10, pady=10)
+    boton_regresar = Button(frame_centrado, text='Regresar', width=15,
+                            height=3, command=callback, bd="4")
+    boton_regresar.grid(row=5, column=0, padx=10, pady=10)
+    return main_frame
+
+
+#Evaluador de cadenas
+def verificar_cadena_en_afd(cadena, afd):
+    imprimir = '************************************************'
+    estado_actual = afd['estado inicial']
+    for caracter in cadena:
+        if caracter not in afd['alfabeto']:
+            imprimir1 = f'\n\n\n\n\nEl caracter: {caracter}\n no está en el alfabeto del AFD:  {afd["nombre"]}'
+            mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + imprimir1.center(75, ' ') + imprimir.center(75, ' ') + '\n'
+            messagebox.showinfo(message=mensaje, title="Mensaje")
+            return False
+
+        transicion_encontrada = False
+        for transicion in afd['transciciones']:
+            if transicion[0] == estado_actual and transicion[1] == caracter:
+                estado_actual = transicion[2]
+                transicion_encontrada = True
+                break
+
+        if not transicion_encontrada:
+            imprimir1 = f"No hay una transición definida para el estado '{estado_actual}' y el caracter '{caracter}' en el AFD: '{afd['nombre']}'"
+            mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + imprimir1.center(75, ' ') + imprimir.center(75, ' ') + '\n'
+            messagebox.showinfo(message=mensaje, title="Mensaje")
+            return False
+
+    if estado_actual in afd['estados de aceptacion']:
+        imprimir1 = f'La cadena {cadena} es válida en el AFD: {afd["nombre"]}'
+        mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + imprimir1.center(75, ' ') + imprimir.center(75, ' ') + '\n'
+        return messagebox.showinfo(message=mensaje, title="Mensaje")
+    else:
+        imprimir1 = f'La cadena {cadena} no es válida en el AFD: {afd["nombre"]}'
+        mensaje = '\n\n\n\n\n' + imprimir.center(75, ' ') + imprimir1.center(75,' ') + imprimir.center(75, ' ') + '\n'
+        return messagebox.showinfo(message=mensaje, title="Mensaje")
+
+#Funcion valifar afds
+def validar_cadena_afd():
+    afd_seleccionado = combo.get()
+    for element in informacion_afd:
+        indice = str(informacion_afd.index(element))
+        if element['nombre'] == afd_seleccionado:
+            afd_seleccionado = int(indice)
+    verificar_cadena_en_afd(cadena.get(),informacion_afd[afd_seleccionado])
+
+#Funcion mostrar AFD combobox
+def mostrar_afd():
+    global combo,cadena
+    afd_nombres = []
+    for element in informacion_afd:
+        afd_nombres.append(element['nombre'])
+    combo = ttk.Combobox(frame_validar,font=('Arial',10),state="readonly",values=afd_nombres)
+    combo.grid(row=1,column=1,padx=10,pady=10)
+    boton_regresar.grid(row=3, column=1, padx=10, pady=10)
+    label2 = Label(frame_validar, text="Ingrese una cadena")
+    label2.grid(row=2, column=0, padx=10, pady=10,sticky='w')
+    cadena = StringVar()
+    entry_cadena = Entry(frame_validar,font=('Arial',12),justify="center",textvariable=cadena)
+    entry_cadena.grid(row=2, column=1, padx=10, pady=10)
+    boton_validar = Button(frame_validar,text='Validar',width=15,height=3,command=validar_cadena_afd,bd="4")
+    boton_validar.grid(row=2,column=2,padx=10,pady=10,sticky='w')
+#Ventanas
+def ventana_validar_afd(master, callback=None, args=(), kwargs={}):
+    global frame_validar, boton_regresar
+    if callback is not None:
+        callback = functools.partial(callback, *args, **kwargs)
+
+    main_frame = Frame(master)
+    # frame centrado
+    frame_validar = Frame(main_frame, height=310, width=450)
+    frame_validar.place(relx=0.5, rely=0.5, anchor="center")
+    # agregando botones
+    label = Label(frame_validar, text="Modulo Validar AFD")
+    label.grid(row=0, column=0, padx=10, pady=10)
+    label1 = Label(frame_validar, text="Elija un AFD")
+    label1.grid(row=1, column=0, padx=10, pady=10,sticky='e')
+    boton_mostrar = Button(frame_validar,text='Mostrar AFDs',width=15,height=3,command=mostrar_afd,bd="4")
+    boton_mostrar.grid(row=1,column=2,padx=10,pady=10,sticky='w')
+    boton_regresar = Button(frame_validar, text='Regresar', width=15,
+                            height=3, command=callback, bd="4")
+    boton_regresar.grid(row=3, column=0, padx=10, pady=10)
+    return main_frame
 
 def ventana_afd_crear(master, callback=None, args=(), kwargs={}):
     global nombre_afd,estados_afd,alfabeto_afd,estado_inicial_afd,estados_aceptacion_afd,campo_transiciones_afd
@@ -523,6 +799,38 @@ def ventana_afd_crear(master, callback=None, args=(), kwargs={}):
     boton_aceptar.grid(row=7, column=1, padx=10, pady=10)
     return main_frame
 
+def ventana_afd_ayuda(master, callback=None, args=(), kwargs={}):
+    if callback is not None:
+        callback = functools.partial(callback, *args, **kwargs)
+
+    main_frame = Frame(master)
+    # frame centrado
+    frame_centrado = Frame(main_frame, height=310, width=450)
+    frame_centrado.place(relx=0.5, rely=0.5, anchor="center")
+    # agregando botones
+    label = Label(frame_centrado, text="Modulo Ayuda AFN")
+    label.grid(row=0, column=0, padx=10, pady=10)
+    imagen_ayuda = Image.open("imagenes/afd.png")
+    imagen_ejemplo = Image.open("imagenes/ejemploafd.png")
+    max_width = 600
+    max_height = 250
+    ajustada_ayuda = imagen_ayuda.resize((max_width,max_height-50), Image.ANTIALIAS)
+    ajustada_ejemplo = imagen_ejemplo.resize((max_width,max_height-50), Image.ANTIALIAS)
+    imagen_ayuda_tk = ImageTk.PhotoImage(ajustada_ayuda)
+    imagen_ejemplo_tk = ImageTk.PhotoImage(ajustada_ejemplo)
+    
+    label_image = Label(frame_centrado, image=imagen_ayuda_tk)
+    label_ejemplo = Label(frame_centrado, image=imagen_ejemplo_tk)
+    label_image.grid(row=1, column=0)
+    label_ejemplo.grid(row=2, column=0)
+    
+    # Mantén una referencia global a la imagen
+    label_image.image = imagen_ayuda_tk
+    label_ejemplo.image = imagen_ejemplo_tk
+    boton_regresar = Button(frame_centrado, text='Regresar', width=15,
+                            height=3, command=callback, bd="4")
+    boton_regresar.grid(row=3, column=0, padx=10, pady=10)
+    return main_frame
 
 def ventana_oe(master, callback=None, args=(), kwargs={}):
     if callback is not None:
@@ -549,7 +857,6 @@ def ventana_oe(master, callback=None, args=(), kwargs={}):
     boton_regresar.grid(row=4, column=0, padx=10, pady=10)
     return main_frame
 
-
 def ventana_crear(master, callback=None, args=(), kwargs={}):
     if callback is not None:
         callback = functools.partial(callback, *args, **kwargs)
@@ -572,7 +879,6 @@ def ventana_crear(master, callback=None, args=(), kwargs={}):
     boton_regresar.grid(row=3, column=0, padx=10, pady=10)
     return main_frame
 
-
 def ventana_cargar(master, callback=None, args=(), kwargs={}):
     if callback is not None:
         callback = functools.partial(callback, *args, **kwargs)
@@ -594,7 +900,6 @@ def ventana_cargar(master, callback=None, args=(), kwargs={}):
                             height=3, command=callback, bd="4")
     boton_regresar.grid(row=3, column=0, padx=10, pady=10)
     return main_frame
-
 
 # Abro venta
 ventana = ThemedTk(theme="ubuntu")
@@ -619,9 +924,14 @@ miFrameV.place(x=0, y=25)
 miFrameV.config(width=ancho_ventana, height=alto_ventana,relief="solid", bd="3")
 # Funciones para ventanas en botones
 var_ventana_afn = ventana_afn(ventana, mostrar_principal)
+var_ventana_evaluar_afn = ventana_evaluar_afn(ventana,mostrar_ventana_afn)
 var_ventana_afn_crear = ventana_afn_crear(ventana, mostrar_ventana_afn)
+var_ventana_ayuda_afn = ventana_afn_ayuda(ventana,mostrar_ventana_afn)
 var_ventana_afd = ventana_afd(ventana, mostrar_principal)
+var_ventana_evaluar_afd = ventana_evaluar_afd(ventana,mostrar_ventana_afd)
+var_ventana_validar_afd = ventana_validar_afd(ventana,mostrar_ventana_evaluar_afd)
 var_ventana_afd_crear = ventana_afd_crear(ventana, mostrar_ventana_afd)
+var_ventana_ayuda_afd = ventana_afd_ayuda(ventana,mostrar_ventana_afd)
 var_ventana_oe = ventana_oe(ventana, mostrar_principal)
 var_ventana_cargar_archivos = ventana_cargar(ventana, mostrar_principal)
 # agregando Items a frame Variable
@@ -643,4 +953,4 @@ miFrame1.pack(side="bottom", fill="x")
 miFrame1.config(width="500", height="30", relief="solid", bd="3")
 
 ventana.mainloop()
-# generarDOT()
+
